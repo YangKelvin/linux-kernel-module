@@ -20,16 +20,20 @@ int hw_init(void)
     printk(KERN_INFO "Loading Module...\n");
 
     struct birthday *person;
-    
-    person = kmalloc(sizeof(*person), GFP_KERNEL);
-    person->day = 2;
-    person->month = 8;
-    person->year = 1995;
+    int i;
+    for (i = 0; i < 5; i++)
+    {
+        person = kmalloc(sizeof(*person), GFP_KERNEL);
+        person->day = 2;
+        person->month = 8+i;
+        person->year = 1995;
+        INIT_LIST_HEAD(&person->list);
+        // list_add_tail(*new_lis, *head)
+        list_add_tail(&person->list, &birthday_list);
+    }
     
     printk (KERN_INFO "The list be constructed\n");
-    INIT_LIST_HEAD(&person->list);
-    // list_add_tail(*new_lis, *head)
-    list_add_tail(&person->list, &birthday_list);
+    
     list_for_each_entry(person, &birthday_list, list)
     {
         printk(KERN_INFO "Day:%d Month:%d Year:%d\n", person->day, person->month, person->year);
